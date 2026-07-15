@@ -599,7 +599,10 @@ Heading:  ✅ INFRA Complete — <PIPELINE_NAME>
 Section: Summary
   • Ticket     : <TICKET_ID>  |  Parent: <PARENT_KEY>
   • Pipeline   : <pipeline_name>
-  • Requestor  : <reporter displayName> (<reporter email>) — from Jira reporter field
+  • Requestor  : @mention the Jira reporter using ADF mention node (requires accountId lookup):
+                 1. GET /rest/api/3/user/search?query=<reporter_email> → extract accountId
+                 2. In ADF use: {"type":"mention","attrs":{"id":"<accountId>","text":"@<displayName>","accessLevel":""}}
+                 This tags them in Jira so they receive a notification.
   • Operator   : demahato@groupon.com
   • Completed  : <date>
 
