@@ -597,10 +597,11 @@ Post a final consolidated summary comment and offer to transition the ticket to 
 Heading:  ✅ INFRA Complete — <PIPELINE_NAME>
 
 Section: Summary
-  • Ticket   : <TICKET_ID>
-  • Pipeline : <pipeline_name>
-  • Completed: <date>
-  • Operator : demahato@groupon.com
+  • Ticket     : <TICKET_ID>  |  Parent: <PARENT_KEY>
+  • Pipeline   : <pipeline_name>
+  • Requestor  : <reporter displayName> (<reporter email>) — from Jira reporter field
+  • Operator   : demahato@groupon.com
+  • Completed  : <date>
 
 Section: Objects Created in Prod
 Bullet list:
