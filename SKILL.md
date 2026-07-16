@@ -31,6 +31,15 @@ Parse `$ARGUMENTS` to extract `TICKET_ID` (e.g. `GDP-8738`).
 
 **Post a structured comment to Jira after every step.** This creates a full audit trail in the ticket even if work stops mid-way.
 
+> ❗ **MANDATORY — ALL DATA OPERATIONS MUST BE LOGGED TO JIRA**
+> Every INSERT, TRUNCATE, or data-modifying operation must be followed immediately by a Jira comment containing:
+> 1. The exact SQL that was run (in a `sql` code block)
+> 2. The result (rows affected / verification SELECT output)
+>
+> This applies to: table_limits INSERTs, backfill INSERTs, TRUNCATE + reloads, any other DML.
+> Do NOT summarise ("4 rows inserted") without also posting the actual SQL and output.
+> Never move to the next step until the Jira comment is confirmed posted.
+
 ### ADF comment poster (reuse this pattern for every comment)
 
 ```bash
