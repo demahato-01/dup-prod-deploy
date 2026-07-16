@@ -162,9 +162,26 @@ WATCH-OUTS:
 
 **Stop if status is already Done.** Otherwise ask: **"Does this look right? Proceed?"**
 
+### On user confirmation — before posting Jira comment
+
+1. **Transition ticket to In Progress:**
+
+```bash
+# Get transitions
+curl -s -u "demahato@groupon.com:$JIRA_TOKEN" \
+  "https://groupondev.atlassian.net/rest/api/3/issue/<TICKET_ID>/transitions" \
+  | python3 -c "import json,sys; [print(t['id'],'—',t['name']) for t in json.load(sys.stdin)['transitions']]"
+
+# Apply "Start progress" (id varies — pick the one named "Start progress" or "In Progress")
+curl -s -u "demahato@groupon.com:$JIRA_TOKEN" \
+  -H "Content-Type: application/json" -X POST \
+  "https://groupondev.atlassian.net/rest/api/3/issue/<TICKET_ID>/transitions" \
+  -d '{"transition":{"id":"<IN_PROGRESS_ID>"}}'
+```
+
 ### Jira comment — Step 0
 
-Post immediately after user confirms, to mark work as started:
+Post immediately after transitioning to In Progress, to mark work as started:
 
 ```
 Heading:  🔄 INFRA Deployment Started — <PIPELINE_NAME>
