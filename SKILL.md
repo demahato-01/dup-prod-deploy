@@ -258,6 +258,11 @@ Apply two substitutions to every DDL statement:
 
 For each object, follow this sequence **individually** — check, create, post DDL, repeat:
 
+> ❗ **MANDATORY — DO NOT SKIP — DO NOT BATCH**
+> The DDL Jira comment is REQUIRED after EVERY object creation, no exceptions.
+> You MUST NOT move to the next object until the DDL comment for the current one is posted.
+> This is non-negotiable regardless of how many objects are in the ticket.
+
 1. Check if the object already exists (see HARD STOP below).
 2. Run the DDL:
    ```bash
@@ -265,19 +270,24 @@ For each object, follow this sequence **individually** — check, create, post D
      --project_id=prj-grp-curation-sox-prod \
      '<DDL_STATEMENT>'
    ```
-3. **Immediately after creation succeeds**, fetch the DDL from prod and post it to Jira as its own comment:
+3. **Before moving to the next object**, fetch the DDL from prod and post it to Jira:
    - Tables: `SELECT ddl FROM \`prj-grp-curation-sox-prod.<dataset>\`.INFORMATION_SCHEMA.TABLES WHERE table_name = '<table>'`
    - Views: `SELECT view_definition FROM \`prj-grp-curation-sox-prod.<dataset>\`.INFORMATION_SCHEMA.VIEWS WHERE table_name = '<view>'`
    - External tables: BQ REST API `GET /bigquery/v2/projects/prj-grp-curation-sox-prod/datasets/<dataset>/tables/<table>`
 
-   **Jira comment format per object (post immediately, do not batch):**
+   **Jira comment format per object:**
    ```
    Heading (level 4): ✅ DDL Applied — <dataset>.<table> (<TYPE>)
    Code block (sql): <full DDL fetched from INFORMATION_SCHEMA or REST API>
    Note: any fixes applied (e.g. SELECT * alias fix, REST API instead of SQL DDL)
    ```
 
-Do not wait until all objects are done — post each DDL comment right after that object is created.
+4. Only after the Jira comment is confirmed posted, proceed to the next object.
+
+**Checklist before moving on from any object:**
+- [ ] Table created in BQ prod ✅
+- [ ] DDL fetched from INFORMATION_SCHEMA ✅
+- [ ] DDL comment posted to Jira ✅
 
 ---
 
