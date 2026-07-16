@@ -95,7 +95,7 @@ Use these JSON fragments to assemble each comment body. Keep comments clean — 
 ```bash
 curl -s -u "demahato@groupon.com:$JIRA_TOKEN" \
   -H "Accept: application/json" \
-  "https://groupondev.atlassian.net/rest/api/3/issue/<TICKET_ID>?fields=summary,description,status,parent,assignee,comment" \
+  "https://groupondev.atlassian.net/rest/api/3/issue/<TICKET_ID>?fields=summary,description,status,parent,assignee,reporter,comment,timetracking" \
   | python3 -c "
 import json, sys
 data = json.load(sys.stdin)
@@ -103,6 +103,9 @@ f = data['fields']
 print('STATUS:', f['status']['name'])
 print('PARENT:', f.get('parent', {}).get('key',''), '-', f.get('parent', {}).get('fields',{}).get('summary',''))
 print('SUMMARY:', f['summary'])
+print('REPORTER:', f.get('reporter', {}).get('displayName',''), '|', f.get('reporter', {}).get('emailAddress',''))
+tt = f.get('timetracking') or {}
+print('ESTIMATE:', tt.get('originalEstimate', 'NONE'))
 
 def walk(node):
     t = node.get('type','')
@@ -118,6 +121,17 @@ def walk(node):
 desc = f.get('description') or {}
 print('DESC:', ' '.join(walk(desc)))
 "
+```
+
+**If ESTIMATE is NONE**, automatically set it to 2h before proceeding:
+
+```bash
+curl -s -u "demahato@groupon.com:$JIRA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -X PUT \
+  "https://groupondev.atlassian.net/rest/api/3/issue/<TICKET_ID>" \
+  -d '{"fields": {"timetracking": {"originalEstimate": "2h"}}}'
+# Confirm with: ✅ Estimate set to 2h on <TICKET_ID>
 ```
 
 From the output, extract and display to the user in a clean summary:
