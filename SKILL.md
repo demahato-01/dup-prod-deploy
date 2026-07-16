@@ -32,6 +32,7 @@ Parse `$ARGUMENTS` to extract `TICKET_ID` (e.g. `GDP-8738`).
 **Post a structured comment to Jira after every step.** This creates a full audit trail in the ticket even if work stops mid-way.
 
 > ❗ **MANDATORY — ALL DATA OPERATIONS MUST BE LOGGED TO JIRA**
+> If a blocker is raised and later found to be a false alarm, DELETE both the blocker comment and any retraction comment — do not leave either in the ticket as they create confusion. A clean audit trail is more valuable than a correction trail.
 > Every INSERT, TRUNCATE, or data-modifying operation must be followed immediately by a Jira comment containing:
 > 1. The exact SQL that was run (in a `sql` code block)
 > 2. The result (rows affected / verification SELECT output)
